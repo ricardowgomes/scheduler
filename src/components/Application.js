@@ -48,19 +48,32 @@ const appointments = [
   }
 ];
 
+
 export default function Application(props) {
-  const [day, setDay] = useState('Monday');
-  const [days, setDays] = useState([]);
+  // const [day, setDay] = useState('Monday');
+  // const [days, setDays] = useState([]);
+  const [state, setState] = useState({
+    day: "Monday",
+    days: [],
+    // you may put the line below, but will have to remove/comment hardcoded appointments variable
+    appointments: {}
+  });
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const setDay = (day) => setState({ ...state, day });
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const setDays = (days) => setState(prev => ({ ...prev, days }));
 
   useEffect(() => {
     axios.get(`/api/days`)
       .then(response => {
-        console.log(response);
         setDays(response.data);
       })
       .catch(error => {
         console.log(error);
       })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 
@@ -80,8 +93,8 @@ export default function Application(props) {
         <hr className="sidebar__separator sidebar--centered" />
         <nav className="sidebar__menu">
           <DayList
-            days={days}
-            day={day}
+            days={state.days}
+            day={state.day}
             setDay={setDay}
           />
         </nav>
