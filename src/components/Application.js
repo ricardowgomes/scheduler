@@ -63,6 +63,8 @@ export default function Application(props) {
       })
   }, []);
 
+
+
   const renderAppointments = appointments.map(app => (
     <Appointment key={app.id} {...app} />
   ))
