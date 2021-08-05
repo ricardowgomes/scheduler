@@ -4,7 +4,7 @@ import axios from "axios";
 import "components/Application.scss";
 import DayList from "./DayList"
 import Appointment from "./Appointment/Index"
-import getAppointmentsForDay from '../helpers/selectors'
+import { getAppointmentsForDay, getInterview } from '../helpers/selectors'
 
 // const appointments = [
 //   {
@@ -54,11 +54,12 @@ export default function Application(props) {
   const [state, setState] = useState({
     day: "Monday",
     days: [],
-    appointments: []
+    appointments: [],
+    interviewers: {}
   });
 
   const dailyAppointments = getAppointmentsForDay(state, state.day);
-
+  console.log(getAppointmentsForDay(state, state.day))
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const setDay = (day) => setState({ ...state, day });
 
@@ -73,7 +74,11 @@ export default function Application(props) {
     ])
       .then(response => {
         const [daysData, appointmentsData, interviewersData] = response;
-        setState(prev => ({ ...prev, days: daysData.data, appointments: appointmentsData.data }));
+        setState(prev => ({
+          ...prev, days: daysData.data,
+          appointments: appointmentsData.data,
+          interviewers: interviewersData.data
+        }));
       })
       .catch(error => {
         console.log(error);
@@ -83,9 +88,18 @@ export default function Application(props) {
 
 
 
-  const renderAppointments = dailyAppointments.map(app => (
-    <Appointment key={app.id} {...app} />
-  ))
+  const renderAppointments = dailyAppointments.map(app => {
+    const interview = getInterview(state, app.interview);
+
+    return (
+      <Appointment
+        key={app.id}
+        id={app.id}
+        time={app.time}
+        interview={interview}
+      />
+    );
+  });
 
   return (
     <main className="layout">
