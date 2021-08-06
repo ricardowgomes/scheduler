@@ -58,8 +58,28 @@ export default function Application(props) {
     interviewers: {}
   });
 
+  const bookInterview = (id, interview) => {
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    console.log("Inside bookInterview \n", interview)
+
+    axios.put(`/api/appointments/${id}`, appointment)
+      .then(res => {
+        console.log(res);
+        setState({
+          ...state, appointments
+        })
+      })
+  }
+
   const dailyAppointments = getAppointmentsForDay(state, state.day);
-  console.log(getAppointmentsForDay(state, state.day))
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const setDay = (day) => setState({ ...state, day });
 
@@ -97,9 +117,13 @@ export default function Application(props) {
         id={app.id}
         time={app.time}
         interview={interview}
+        bookInterview={bookInterview}
+        state={state}
       />
     );
   });
+
+
 
   return (
     <main className="layout">
@@ -124,7 +148,12 @@ export default function Application(props) {
         />      </section>
       <section className="schedule">
         {renderAppointments}
-        <Appointment key="last" time="5pm" />
+        <Appointment
+          key="last"
+          time="5pm"
+          bookInterview={bookInterview}
+          state={state}
+        />
       </section>
     </main>
   );

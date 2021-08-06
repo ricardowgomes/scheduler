@@ -13,12 +13,8 @@ export default function Form(props) {
     setInterviewer(null)
   };
 
-  // const onSave = () => {
-  //   const whatever = {studentName, interviewer}
-  // }
-
   const studentInputHandler = (event) => {
-    setStudentName(event.target.value)
+    setStudentName(event.target.value);
   };
 
   return (
@@ -32,7 +28,6 @@ export default function Form(props) {
             placeholder="Enter Student Name"
             value={studentName}
             onChange={studentInputHandler}
-            onSubmit={event => event.preventDefault()}
           />
         </form>
         <InterviewerList
@@ -45,11 +40,11 @@ export default function Form(props) {
         <section className="appointment__actions">
           <Button
             danger
-            onClick={reset}
+            onClick={props.onCancel}
           >Cancel</Button>
           <Button
             confirm
-            onClick={props.onSave}
+            onClick={() => props.onSave(studentName, interviewer)}
           >Save</Button>
         </section>
       </section>

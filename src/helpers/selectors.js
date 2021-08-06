@@ -41,4 +41,26 @@ const getInterview = (state, interview) => {
   return newObject;
 };
 
-export { getAppointmentsForDay, getInterview };
+// Working independe from getAppointmentsForDay
+const getInterviewersForDay = (state, day) => {
+  const interviewers = [];
+  let interviewersIds = [];
+
+  if (!state.days) return interviewers;
+
+  for (const dayApp of state.days) {
+    if (dayApp.interviewers.length === 0) return interviewers;
+
+    if (day === dayApp.name) {
+      interviewersIds = [...dayApp.interviewers];
+    }
+  }
+
+  for (const interviewer of interviewersIds) {
+    interviewers.push(state.interviewers[interviewer])
+  }
+
+  return interviewers;
+};
+
+export { getAppointmentsForDay, getInterview, getInterviewersForDay };
