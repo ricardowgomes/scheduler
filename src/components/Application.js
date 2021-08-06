@@ -36,7 +36,6 @@ export default function Application(props) {
     return axios
       .delete(`/api/appointments/${interviewId}`)
       .then(() => setState((prev) => ({ ...prev, appointments })))
-      .catch((err) => console.error(err));
   }
 
   const bookInterview = (id, interview) => {
@@ -52,7 +51,6 @@ export default function Application(props) {
     return axios
       .put(`/api/appointments/${id}`, appointment)
       .then(() => setState((prev) => ({ ...prev, appointments })))
-      .catch((err) => console.error(err));
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps

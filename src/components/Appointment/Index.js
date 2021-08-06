@@ -9,6 +9,7 @@ import Empty from "./Empty"
 import Form from "./Form"
 import Status from "./Status"
 import Confirm from "./Confirm"
+import Error from "./Error"
 
 import useVisualMode from "../../hooks/useVisualMode"
 import { getInterviewersForDay } from "../../helpers/selectors"
@@ -25,35 +26,45 @@ export default function Appointment(props) {
   const DELETING = "DELETING";
   const CONFIRM = "CONFIRM";
   const EDIT = "EDIT";
-  const ERROR_SAVE = "ERROR_SAVE";
+
   const ERROR_DELETE = "ERROR_DELETE";
+  const ERROR_SAVE = "ERROR_SAVE";
 
-
+  //-----------------------------------------
+  // Variables
   const studentName = props.interview ? props.interview.student : null;
+  const dailyInterviewers = getInterviewersForDay(props.state, props.state.day);
 
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
 
   const onSave = (name, interviewerId) => {
-    transition(SAVING)
+    transition(SAVING, true)
 
     props
       .bookInterview(props.id, { student: name, interviewer: interviewerId })
-      .then(() => transition(SHOW));
+      .then(() => transition(SHOW))
+      .catch(err => {
+        console.log(`I'm rejecting the promise: ${err}`);
+        transition(ERROR_SAVE, true);
+      });
   };
 
   const onConfirm = () => {
-    transition(DELETING);
-    props.cancelInterview(props.id)
-      .then(() => transition(EMPTY));
+    transition(DELETING, true);
+    props
+      .cancelInterview(props.id)
+      .then(() => transition(EMPTY))
+      .catch(err => {
+        console.log(`I'm rejecting the promise: ${err}`);
+        transition(ERROR_DELETE, true);
+      });
   }
 
   const onDelete = () => transition(CONFIRM);
   const onCancel = () => back();
   const onEdit = () => transition(EDIT);
-
-  const dailyInterviewers = getInterviewersForDay(props.state, props.state.day);
 
   return (
     <article className="appointment">
@@ -92,6 +103,14 @@ export default function Appointment(props) {
         onCancel={onCancel}
         name={studentName}
         interviewerId={props.interview.interviewer.id}
+      />}
+      {mode === ERROR_DELETE && <Error
+        message="Sorry =( Couldn't delete your interview! Please, try again later =)"
+        onClose={onCancel}
+      />}
+      {mode === ERROR_SAVE && <Error
+        message="Sorry =( Couldn't save your interview! Please, try again later =)"
+        onClose={onCancel}
       />}
     </article>
   )
