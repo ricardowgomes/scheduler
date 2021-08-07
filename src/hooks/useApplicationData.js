@@ -23,19 +23,16 @@ const useApplicationData = () => {
     }
 
     const numOfSpots = nullAppointments.length;
-
-    // state.days.forEach(obj => {
-    //   if (obj.name === currentDay) {
-    //     obj.spots = numOfSpots;
-    //   }
-    // });
+    dayObj[0].spots = numOfSpots;
 
     const dayObjIndex = state.days.findIndex(day => day.name === currentDay)
     const updateState = { ...state };
+
     updateState.days = [...state.days];
-    const updatedDay = { ...dayObj };
-    updatedDay.spots = numOfSpots;
-    updateState.days[dayObjIndex] = updatedDay;
+    const updatedDay = { ...dayObj[0] };
+
+    // Updates the day inside the state
+    updateState.days.splice(dayObjIndex, 1, updatedDay);
 
     return updateState;
   };
@@ -43,6 +40,7 @@ const useApplicationData = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const setDay = (day) => setState({ ...state, day });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const cancelInterview = (interviewId) => {
     const appointment = {
       ...state.appointments[interviewId],
@@ -56,13 +54,13 @@ const useApplicationData = () => {
     return axios
       .delete(`/api/appointments/${interviewId}`)
       .then((res) => {
-        console.log('Esse eh o resultado delete',);
+        // const newState = updateRemainingSpots(state, 'delete')
         const newState = updateRemainingSpots(state)
-        setState(prev => ({ ...prev, newState }));
-        setState(prev => ({ ...prev, appointments }));
+        setState(prev => ({ ...prev, newState, appointments }));
       });
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const bookInterview = (id, interview) => {
     const appointment = {
       ...state.appointments[id],
@@ -76,9 +74,10 @@ const useApplicationData = () => {
     return axios
       .put(`/api/appointments/${id}`, appointment)
       .then((res) => {
+        // const newState = updateRemainingSpots(state, 'booking')
         const newState = updateRemainingSpots(state)
-        // setState(prev => ({ ...prev, newState }));
-        return setState(prev => ({ ...prev, appointments, newState }))
+        console.log('newState', newState)
+        setState(prev => ({ ...prev, appointments, newState }))
       });
   }
 
@@ -100,7 +99,7 @@ const useApplicationData = () => {
         console.log(error);
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [bookInterview, cancelInterview]);
 
   return { state, setDay, bookInterview, cancelInterview }
 }

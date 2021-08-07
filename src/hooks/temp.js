@@ -328,26 +328,25 @@ const updateRemainingSpots = (state, day) => {
   }
 
   const numOfSpots = nullAppointments.length;
+  dayObj[0].spots = numOfSpots;
+
+  const dayObjIndex = state.days.findIndex(day => day.name === currentDay)
+  const updateState = { ...state };
+
+  updateState.days = [...state.days];
+  const updatedDay = { ...dayObj[0] };
+
+  // Updates the day inside the state
+  updateState.days.splice(dayObjIndex, 1, updatedDay);
+
+  return updateState;
+};
+
+const test = updateRemainingSpots(state);
+// console.log(test)
 
   // state.days.forEach(obj => {
   //   if (obj.name === currentDay) {
   //     obj.spots = numOfSpots;
   //   }
   // });
-
-
-  // const dayObjIndex = state.days.findIndex(day => day.name === currentDay)
-  // const updateState = { ...state };
-  // updateState.days = [...state.days];
-  // const updatedDay = { ...dayObj };
-  // updatedDay.spots = numOfSpots;
-  // updateState.days[dayObjIndex] = updatedDay;
-
-  // return updateState;
-  dayObj.spots = numOfSpots;
-
-  return dayObj;
-};
-
-const test = updateRemainingSpots(state);
-console.log(test)
