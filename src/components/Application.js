@@ -2,8 +2,8 @@
 
 //------------------------------------------------------------------------------
 // Import
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React from "react";
+import useApplicationData from "../hooks/useApplicationData"
 
 import "components/Application.scss";
 
@@ -16,82 +16,29 @@ import { getAppointmentsForDay, getInterview } from '../helpers/selectors'
 // Component
 
 export default function Application(props) {
-  const [state, setState] = useState({
-    day: "Monday",
-    days: [],
-    appointments: [],
-    interviewers: {}
-  });
+  const {
+    state,
+    setDay,
+    bookInterview,
+    cancelInterview
+  } = useApplicationData();
 
-  const cancelInterview = (interviewId) => {
-    const appointment = {
-      ...state.appointments[interviewId],
-      interview: null
-    };
-    const appointments = {
-      ...state.appointments,
-      [interviewId]: appointment
-    };
+  const appointments = getAppointmentsForDay(state, state.day)
+    .map(app => {
+      const interview = getInterview(state, app.interview);
 
-    return axios
-      .delete(`/api/appointments/${interviewId}`)
-      .then(() => setState((prev) => ({ ...prev, appointments })))
-  }
-
-  const bookInterview = (id, interview) => {
-    const appointment = {
-      ...state.appointments[id],
-      interview: { ...interview }
-    };
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
-    };
-
-    return axios
-      .put(`/api/appointments/${id}`, appointment)
-      .then(() => setState((prev) => ({ ...prev, appointments })))
-  }
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const setDay = (day) => setState({ ...state, day });
-
-  const dailyAppointments = getAppointmentsForDay(state, state.day);
-  const renderAppointments = dailyAppointments.map(app => {
-    const interview = getInterview(state, app.interview);
-
-    return (
-      <Appointment
-        key={app.id}
-        id={app.id}
-        time={app.time}
-        interview={interview}
-        bookInterview={bookInterview}
-        cancelInterview={cancelInterview}
-        state={state}
-      />
-    );
-  });
-
-  useEffect(() => {
-    Promise.all([
-      axios.get(`/api/days`),
-      axios.get(`/api/appointments`),
-      axios.get(`/api/interviewers`)
-    ])
-      .then(response => {
-        const [daysData, appointmentsData, interviewersData] = response;
-        setState(prev => ({
-          ...prev, days: daysData.data,
-          appointments: appointmentsData.data,
-          interviewers: interviewersData.data
-        }));
-      })
-      .catch(error => {
-        console.log(error);
-      })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+      return (
+        <Appointment
+          key={app.id}
+          id={app.id}
+          time={app.time}
+          interview={interview}
+          bookInterview={bookInterview}
+          cancelInterview={cancelInterview}
+          state={state}
+        />
+      );
+    });
 
   return (
     <main className="layout">
@@ -115,7 +62,7 @@ export default function Application(props) {
           alt="Lighthouse Labs"
         />      </section>
       <section className="schedule">
-        {renderAppointments}
+        {appointments}
         <Appointment
           key="last"
           time="5pm"
