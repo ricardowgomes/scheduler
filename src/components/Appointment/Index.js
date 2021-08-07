@@ -46,7 +46,6 @@ export default function Appointment(props) {
       .bookInterview(props.id, { student: name, interviewer: interviewerId })
       .then(() => transition(SHOW))
       .catch(err => {
-        console.log(`I'm rejecting the promise: ${err}`);
         transition(ERROR_SAVE, true);
       });
   };
@@ -57,7 +56,6 @@ export default function Appointment(props) {
       .cancelInterview(props.id)
       .then(() => transition(EMPTY))
       .catch(err => {
-        console.log(`I'm rejecting the promise: ${err}`);
         transition(ERROR_DELETE, true);
       });
   }
