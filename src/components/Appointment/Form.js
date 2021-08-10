@@ -15,6 +15,7 @@ export default function Form(props) {
   };
 
   const studentInputHandler = (event) => {
+    setError("");
     setStudentName(event.target.value);
   };
 
@@ -25,7 +26,7 @@ export default function Form(props) {
 
   const validate = () => {
     if (studentName === "") {
-      setError("Student name cannot be blank");
+      setError("student name cannot be blank");
       return;
     }
 
@@ -33,7 +34,7 @@ export default function Form(props) {
     //   setError("Select an interviewer");
     //   return;
     // }
-
+    setError("");
     props.onSave(studentName, interviewer)
   }
 

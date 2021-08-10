@@ -38,7 +38,9 @@ const useApplicationData = () => {
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
+
   const setDay = (day) => setState({ ...state, day });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const cancelInterview = (interviewId) => {
@@ -74,7 +76,6 @@ const useApplicationData = () => {
     return axios
       .put(`/api/appointments/${id}`, appointment)
       .then((res) => {
-        // const newState = updateRemainingSpots(state, 'booking')
         const newState = updateRemainingSpots(state)
         setState(prev => ({ ...prev, appointments, newState }))
       });
@@ -98,7 +99,7 @@ const useApplicationData = () => {
         console.log(error);
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bookInterview, cancelInterview]);
+  }, [state.appointments]);
 
   return { state, setDay, bookInterview, cancelInterview }
 }
