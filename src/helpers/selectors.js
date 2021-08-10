@@ -49,6 +49,8 @@ const getInterviewersForDay = (state, day) => {
   if (!state.days) return interviewers;
 
   for (const dayApp of state.days) {
+    if (!dayApp.interviewers) return interviewers;
+
     if (dayApp.interviewers.length === 0) return interviewers;
 
     if (day === dayApp.name) {

@@ -12,7 +12,6 @@ import Confirm from "./Confirm"
 import Error from "./Error"
 
 import useVisualMode from "../../hooks/useVisualMode"
-import { getInterviewersForDay } from "../../helpers/selectors"
 
 //------------------------------------------------------------------------------
 // Component
@@ -33,7 +32,7 @@ export default function Appointment(props) {
   //-----------------------------------------
   // Variables
   const studentName = props.interview ? props.interview.student : null;
-  const dailyInterviewers = getInterviewersForDay(props.state, props.state.day);
+  // const dailyInterviewers = getInterviewersForDay(props.state, props.state.day);
 
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
@@ -79,7 +78,7 @@ export default function Appointment(props) {
         />
       )}
       {mode === CREATE && <Form
-        interviewers={dailyInterviewers}
+        interviewers={props.interviewers}
         name={studentName}
         onSave={onSave}
         onCancel={onCancel}
@@ -96,7 +95,7 @@ export default function Appointment(props) {
         onCancel={onCancel}
       />}
       {mode === EDIT && <Form
-        interviewers={dailyInterviewers}
+        interviewers={props.interviewers}
         onSave={onSave}
         onCancel={onCancel}
         name={studentName}

@@ -76,7 +76,6 @@ const useApplicationData = () => {
       .then((res) => {
         // const newState = updateRemainingSpots(state, 'booking')
         const newState = updateRemainingSpots(state)
-        console.log('newState', newState)
         setState(prev => ({ ...prev, appointments, newState }))
       });
   }

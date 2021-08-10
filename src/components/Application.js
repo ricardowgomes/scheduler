@@ -10,7 +10,7 @@ import "components/Application.scss";
 import DayList from "./DayList"
 import Appointment from "./Appointment/Index"
 
-import { getAppointmentsForDay, getInterview } from '../helpers/selectors'
+import { getAppointmentsForDay, getInterview, getInterviewersForDay } from '../helpers/selectors'
 
 //------------------------------------------------------------------------------
 // Component
@@ -22,6 +22,8 @@ export default function Application(props) {
     bookInterview,
     cancelInterview
   } = useApplicationData();
+
+  const dailyInterviewers = getInterviewersForDay(state, state.day);
 
   const appointments = getAppointmentsForDay(state, state.day)
     .map(app => {
@@ -35,7 +37,7 @@ export default function Application(props) {
           interview={interview}
           bookInterview={bookInterview}
           cancelInterview={cancelInterview}
-          state={state}
+          interviewers={dailyInterviewers}
         />
       );
     });
@@ -68,7 +70,7 @@ export default function Application(props) {
           time="5pm"
           bookInterview={bookInterview}
           cancelInterview={cancelInterview}
-          state={state}
+          interviewers={dailyInterviewers}
         />
       </section>
     </main>
