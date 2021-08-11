@@ -85,7 +85,6 @@ export default {
   }),
 
   put: jest.fn(url => {
-    fixtures.days[0].spots = 0;
     return Promise.resolve({ status: 204, statusText: 'No Content' })
   }),
 

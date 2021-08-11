@@ -56,8 +56,7 @@ const useApplicationData = () => {
     return axios
       .delete(`/api/appointments/${interviewId}`)
       .then((res) => {
-        const newState = updateRemainingSpots(state)
-        setState(prev => ({ ...prev, newState, appointments }));
+        setState(prev => (updateRemainingSpots({ ...prev, appointments })))
       });
   }
 
@@ -71,13 +70,11 @@ const useApplicationData = () => {
       ...state.appointments,
       [id]: appointment
     };
-    console.log('appointment', appointment)
 
     return axios
       .put(`/api/appointments/${id}`, appointment)
       .then((res) => {
-        const newState = updateRemainingSpots(state)
-        setState(prev => ({ ...prev, appointments, newState }))
+        setState(prev => (updateRemainingSpots({ ...prev, appointments })))
       });
   }
 
@@ -97,10 +94,8 @@ const useApplicationData = () => {
           interviewers: interviewersData.data
         }
 
-        const updateState = updateRemainingSpots(newState);
-
         setState(prev => ({
-          ...prev, ...newState, ...updateState
+          ...prev, ...newState
         }));
       })
       .catch(error => {
