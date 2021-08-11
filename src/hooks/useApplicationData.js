@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
 const useApplicationData = () => {
   const [state, setState] = useState({
     day: "Monday",
     days: [],
-    appointments: [],
+    appointments: {},
     interviewers: {}
   });
 
-  const updateRemainingSpots = (state, day) => {
+  const updateRemainingSpots = useCallback((state, day) => {
     const currentDay = day || state.day;
     const dayObj = state.days.filter(day => day.name === currentDay);
     const appointmentsId = [...dayObj[0].appointments];
@@ -35,7 +35,7 @@ const useApplicationData = () => {
     updateState.days.splice(dayObjIndex, 1, updatedDay);
 
     return updateState;
-  };
+  });
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
 
@@ -56,7 +56,6 @@ const useApplicationData = () => {
     return axios
       .delete(`/api/appointments/${interviewId}`)
       .then((res) => {
-        // const newState = updateRemainingSpots(state, 'delete')
         const newState = updateRemainingSpots(state)
         setState(prev => ({ ...prev, newState, appointments }));
       });
@@ -72,6 +71,7 @@ const useApplicationData = () => {
       ...state.appointments,
       [id]: appointment
     };
+    console.log('appointment', appointment)
 
     return axios
       .put(`/api/appointments/${id}`, appointment)
@@ -89,17 +89,25 @@ const useApplicationData = () => {
     ])
       .then(response => {
         const [daysData, appointmentsData, interviewersData] = response;
-        setState(prev => ({
-          ...prev, days: daysData.data,
+
+        const newState = {
+          day: state.day,
+          days: daysData.data,
           appointments: appointmentsData.data,
           interviewers: interviewersData.data
+        }
+
+        const updateState = updateRemainingSpots(newState);
+
+        setState(prev => ({
+          ...prev, ...newState, ...updateState
         }));
       })
       .catch(error => {
         console.log(error);
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.appointments]);
+  }, []);
 
   return { state, setDay, bookInterview, cancelInterview }
 }
