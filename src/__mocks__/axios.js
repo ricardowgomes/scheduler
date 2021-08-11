@@ -93,22 +93,3 @@ export default {
   ),
   defaults: { baseURL: "" },
 };
-
-  // const axios = {
-  //   get: jest.fn((url) => {
-  //     const data = fixtures[url.replace(/^\/api\//, '')];
-  //     return Promise.resolve({ status: 200, statusText: 'OK', data });
-  //   }),
-
-  //   put: jest.fn((url) =>
-  //     Promise.resolve({ status: 204, statusText: 'No Content' })
-  //   ),
-
-  //   delete: jest.fn((url) =>
-  //     Promise.resolve({ status: 204, statusText: 'No Content' })
-  //   ),
-
-  //   defaults: { baseURL: '' },
-  // };
-
-  // export default axios;
