@@ -64,7 +64,6 @@ export default function Application(props) {
           alt="Lighthouse Labs"
         />      </section>
       <section className="schedule">
-        <div>Something</div>
         {appointments}
         <Appointment
           key="last"

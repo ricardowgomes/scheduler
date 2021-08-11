@@ -64,7 +64,7 @@ export default function Appointment(props) {
   const onEdit = () => transition(EDIT);
 
   return (
-    <article className="appointment">
+    <article className="appointment" data-testid="appointment">
       <Header
         key={props.id}
         time={props.time} />
