@@ -44,12 +44,6 @@ or
 yarn install
 ```
 
-Copy the `.env.example` file to `.env.development` and fill in the URL for the WebSocket connection:
-
-```shell
-REACT_APP_WEBSOCKET_URL=ws://localhost:8001
-```
-
 The app also requires the [Interview Scheduler API](https://github.com/ricardowgomes/scheduler-api) to be installed separately, and a [PostgreSQL](https://www.postgresql.org/) database set up and running. Instructions are provided in the Scheduler API [README](https://github.com/ricardowgomes/scheduler-api#readme).
 
 ---
@@ -125,7 +119,6 @@ Please note that it can take a moment for the API to start up on Heroku and serv
 
 Continuous integration to automate testing and deployment is set up through [CircleCI](https://circleci.com/):
 
-![Continuous pipeline](./docs/continuous-pipeline.png)
 
 ---
 
