@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 const useApplicationData = () => {
@@ -9,7 +9,7 @@ const useApplicationData = () => {
     interviewers: {}
   });
 
-  const updateRemainingSpots = useCallback((state, day) => {
+  const updateRemainingSpots = (state, day) => {
     const currentDay = day || state.day;
     const dayObj = state.days.filter(day => day.name === currentDay);
     const appointmentsId = [...dayObj[0].appointments];
@@ -35,7 +35,7 @@ const useApplicationData = () => {
     updateState.days.splice(dayObjIndex, 1, updatedDay);
 
     return updateState;
-  });
+  };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
 
