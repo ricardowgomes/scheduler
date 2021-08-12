@@ -55,9 +55,7 @@ const fixtures = {
 
 export default {
   get: jest.fn(url => {
-    // console.log('days');
     if (url === "/api/days") {
-      // console.log('after days');
       return Promise.resolve({
         status: 200,
         statusText: "OK",
